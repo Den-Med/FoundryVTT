@@ -11,7 +11,7 @@ tttt = `Hellow World`;
 prf_cont = `<form>
      <div class=\"form-group\">
          <label>Урон:</label>
-         <input type="number" name="damage" size="4" placeholder="полученный урон">
+         <input type="number" name="damage" min="1" placeholder="полученный урон">
      </div>
           `;
 suf_cont = `</form>`;
@@ -39,7 +39,6 @@ new Dialog({
 
    close: html => {
        (async () => {
-            if (confirmed < -1 || confirmed > 1 ) { return };
             const form = html[0].querySelector("form");
             dmg_val = form.damage.value;
             if (dmg_val < 1) { 
@@ -55,18 +54,21 @@ new Dialog({
 function con_roll(dmg, mod, bon) {
      target_val = Math.max(10, dmg);
      switch (mod) {
-          case 1:
+          case 1: //Advantage
                modif = [`kh`];
                num_d = 2;
                break;
-          case 0:
+          case 0: //Normal
                modif = undefined;
                num_d = 1;
                break;
-          case -1:
+          case -1: //Disadvantage
                modif = [`kl`];
                num_d = 2;
                break;
+          default:
+               console.error(`con_check.js - callback error`)
+               return;
      };
      const die = new Die({number: num_d, faces: 20, modifiers: modif,
                     options: { target: target_val },
@@ -74,8 +76,7 @@ function con_roll(dmg, mod, bon) {
      const roll = Roll.fromTerms([die]);
      const save_b = new Roll(`+` + save_bonus);
      const bonus_roll = new Roll(bon);
-     if ( !(bonus_roll.terms[0] instanceof OperatorTerm) && bonus_roll.terms[0] !== undefined ) save_b.terms.push(new OperatorTerm({operator: "+"}));
-//     save_b.terms = save_b.terms.concat(bonus_roll.terms);
+     if ( !(bonus_roll.terms[0] instanceof OperatorTerm) && bonus_roll.terms[0] ) save_b.terms.push(new OperatorTerm({operator: "+"}));
      roll.terms = roll.terms.concat(save_b.terms, bonus_roll.terms);
      roll._formula = roll.constructor.getFormula(roll.terms);
      descr = `Проверка концентрации, при уроне ` + target_val;
