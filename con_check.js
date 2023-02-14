@@ -49,17 +49,11 @@ function con_roll(dmg, mod, bon, rmod) {
      target_val = Math.max(10, dmg);
      switch (mod) {
           case 1: //Advantage
-               modif = [`kh`];
-//               num_d = 2;
-               break;
+               modif = [`kh`]; break;
           case 0: //Normal
-               modif = undefined;
-//               num_d = 1;
-               break;
+               modif = undefined; break;
           case -1: //Disadvantage
-               modif = [`kl`];
-//               num_d = 2;
-               break;
+               modif = [`kl`]; break;
           default:
                console.error(`con_check.js - callback error`)
                return;
