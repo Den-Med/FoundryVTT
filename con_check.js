@@ -62,7 +62,7 @@ function con_roll(dmg, mod, bon, rmod) {
      const die = new Die({number: num_d, faces: 20, modifiers: modif,
                     options: { target: target_val },
                    });
-     const roll = new Roll.fromTerms([die]);
+     const roll = Roll.fromTerms([die]);
      const save_b = new Roll(`+` + save_bonus);
      const bonus_roll = new Roll(bon);
      if ( !(bonus_roll.terms[0] instanceof OperatorTerm) && bonus_roll.terms[0] ) save_b.terms.push(new OperatorTerm({operator: "+"}));
