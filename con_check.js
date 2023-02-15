@@ -3,10 +3,8 @@ if (!c_token.controlled) {
      ui.notifications.warn('Не выбран токен!')
      return;
 };
-save_bonus = c_token.actor.system.abilities.con.save;
-path = `systems/dnd5e/templates/chat/roll-dialog.hbs`;
-// ======================================
-
+const save_bonus = c_token.actor.system.abilities.con.save;
+const path = `systems/dnd5e/templates/chat/roll-dialog.hbs`;
 const cont = await renderTemplate(path , {
  formula: `1d20 + ` + save_bonus + ` + @bonus`,
  rollModes: CONFIG.Dice.rollModes,
@@ -16,14 +14,13 @@ cont_elem.innerHTML = cont;
 var v_div = document.createElement(`div`);
 v_div.classList.add(`form-group`);
 v_div.innerHTML = '<label>Урон:</label>\n<input type="number" name="damage" min="1" placeholder="полученный урон">';
-cont_elem.insertBefore(v_div, cont_elem.childNodes[0])
-content = cont_elem.outerHTML;
+cont_elem.insertBefore(v_div, cont_elem.childNodes[0]);
 // ====================================
 
 confirmed = false;
 new Dialog({
     title: "Проверка концентрации",
-    content: content,
+    content: cont_elem.outerHTML,
     buttons: {
          advantage:    { label: game.i18n.localize("DND5E.Advantage"),    callback: () => confirmed = 1 },
          normal:       { label: game.i18n.localize("DND5E.Normal"),       callback: () => confirmed = 0 },
@@ -58,7 +55,7 @@ function con_roll(dmg, mod, bon, rmod) {
                console.error(`con_check.js - callback error`)
                return;
      };
-     if (!modif) {num_d = 2} else {num_d = 1};
+     num_d = !modif ? 2 : 1;
      const die = new Die({number: num_d, faces: 20, modifiers: modif,
                     options: { target: target_val },
                    });
@@ -68,7 +65,7 @@ function con_roll(dmg, mod, bon, rmod) {
      if ( !(bonus_roll.terms[0] instanceof OperatorTerm) && bonus_roll.terms[0] ) save_b.terms.push(new OperatorTerm({operator: "+"}));
      roll.terms = roll.terms.concat(save_b.terms, bonus_roll.terms);
      roll._formula = roll.constructor.getFormula(roll.terms);
-     descr = `Проверка концентрации. Сложность: ` + target_val;
+     descr = 'Проверка концентрации. Сложность: ' + target_val;
      roll.toMessage({speaker: ChatMessage.getSpeaker(),
                      flavor: descr},
                     {rollMode: rmod} 
