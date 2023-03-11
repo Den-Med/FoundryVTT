@@ -43,7 +43,7 @@ new Dialog({
 }).render(true);
 
 function con_roll(dmg, mod, bon, rmod) {
-     target_val = Math.max(10, dmg);
+     target_val = Math.max(10, Math.floor(dmg / 2 ) );
      switch (mod) {
           case 1: //Advantage
                modif = [`kh`]; break;
